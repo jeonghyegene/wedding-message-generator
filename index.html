@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#FAFAF7" />
+  <title>결혼식 감사인사 프롬프트</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+
+  <style>
+    :root{
+      --bg:#FAFAF7;
+      --surface:#FFFFFF;
+      --text:#18251E;
+      --muted:#7B857F;
+      --line:#E8ECE7;
+      --green:#2A5A43;
+      --green2:#48765F;
+      --greenSoft:#EEF5F0;
+      --yellow:#F7C948;
+      --yellowSoft:#FFF6D7;
+      --shadow:0 12px 28px rgba(23,61,45,.08);
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;background:var(--bg);color:var(--text);
+      font-family:"Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+      letter-spacing:-0.015em;
+    }
+    button,input,textarea,select{font-family:inherit;letter-spacing:-0.015em}
+    body{min-height:100vh}
+
+    .app{
+      width:100%;max-width:480px;min-height:100vh;margin:0 auto;
+      background:var(--bg);position:relative;overflow:hidden;
+    }
+
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      padding:calc(12px + env(safe-area-inset-top)) 20px 12px;
+      background:linear-gradient(180deg,var(--bg) 82%,rgba(250,250,247,0));
+      backdrop-filter:blur(10px);
+    }
+
+    .mode-switch{
+      display:grid;grid-template-columns:1fr 1fr;gap:4px;
+      padding:4px;background:#ECEFEB;border-radius:12px;margin-bottom:12px;
+    }
+    .mode-switch button{
+      border:0;background:transparent;border-radius:9px;padding:11px 8px;
+      font-size:14px;font-weight:800;color:#7D877F;cursor:pointer;
+    }
+    .mode-switch button.active{
+      background:#fff;color:var(--green);
+      box-shadow:0 2px 8px rgba(23,61,45,.07);
+    }
+
+    .sender-switch{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin:2px 2px 16px;
+    }
+    .sender-label{
+      font-size:13px;
+      font-weight:600;
+      color:#929B95;
+      letter-spacing:-0.02em;
+    }
+    .sender-options{
+      display:flex;
+      align-items:center;
+      gap:4px;
+      padding:3px;
+      background:#ECEFEB;
+      border-radius:10px;
+    }
+    .sender-options button{
+      border:0;
+      background:transparent;
+      color:#7D877F;
+      border-radius:8px;
+      padding:7px 12px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+    }
+    .sender-options button.active{
+      background:#fff;
+      color:var(--green);
+      box-shadow:0 1px 5px rgba(23,61,45,.07);
+    }
+
+    .navrow{
+      display:flex;
+      align-items:center;
+      height:34px;
+      margin-bottom:9px;
+    }
+    .nav-spacer{flex:1}
+    .back{
+      width:34px;height:34px;border:0;background:transparent;border-radius:50%;
+      display:grid;place-items:center;cursor:pointer;color:var(--text);padding:0;
+    }
+    .back:active{background:#ECEFEA}
+    .back svg{width:21px;height:21px}
+
+    .progress.segmented{
+      width:100%;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:6px;
+      background:transparent;
+      height:auto;
+      overflow:visible;
+    }
+    .progress.segmented .segment{
+      display:block;
+      width:100%;
+      height:5px;
+      background:#E5EAE5;
+      border-radius:999px;
+      transition:background-color .2s ease;
+    }
+    .progress.segmented .segment.active{
+      background:var(--green);
+    }
+    .stepcount{
+      min-width:34px;text-align:right;font-size:13px;color:var(--muted);font-weight:700
+    }
+
+    main{padding:14px 22px 145px}
+    .screen{display:none;animation:enter .22s ease}
+    .screen.active{display:block}
+    @keyframes enter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+    .label-line{
+      display:inline-flex;align-items:center;gap:9px;margin-bottom:12px;
+      color:var(--green2);font-weight:850;font-size:14px;
+    }
+
+    .flower{width:24px;height:24px;display:inline-block;flex:0 0 auto}
+    h1{
+      font-size:29px;
+      line-height:1.27;
+      letter-spacing:-1px;
+      margin:0 0 10px;
+      font-weight:750;
+    }
+    .sub{
+      margin:0 0 28px;
+      color:#9AA39D;
+      font-size:15px;
+      font-weight:400;
+      line-height:1.55;
+      letter-spacing:-0.02em;
+    }
+    .section-label{
+      display:block;
+      font-size:14px;
+      font-weight:600;
+      letter-spacing:-0.025em;
+      margin:24px 0 10px;
+    }
+
+    .input-wrap{
+      background:#fff;border:1px solid var(--line);border-radius:14px;
+      padding:0 16px;transition:.18s;
+    }
+    .input-wrap:focus-within{
+      border-color:#A6BBAE;box-shadow:0 0 0 4px rgba(44,91,67,.07);
+    }
+    input,textarea,select{
+      width:100%;border:0;outline:0;background:transparent;color:var(--text);
+      font-size:17px;padding:17px 0;
+    }
+    input::placeholder,textarea::placeholder{color:#A8B0AB}
+    textarea{min-height:108px;resize:none;line-height:1.5}
+    select{appearance:none}
+
+    .chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .chip{
+      border:1px solid #DDE3DE;background:#fff;color:var(--text);min-height:54px;
+      border-radius:12px;padding:13px 14px;text-align:left;font-size:15px;
+      font-weight:600;cursor:pointer;transition:.15s;position:relative;
+    }
+    .chip:active{transform:scale(.985)}
+    .chip.selected{
+      border-color:#89A596;background:var(--greenSoft);color:var(--green);
+      box-shadow:none;font-weight:650;
+    }
+    .chip.selected::after{
+      content:"✓";position:absolute;right:12px;top:50%;
+      transform:translateY(-50%);font-weight:700;font-size:13px;
+    }
+    .chip.wide{grid-column:1/-1}
+    .helper{
+      margin-top:9px;
+      color:#A8B0AB;
+      font-size:13px;
+      font-weight:400;
+      line-height:1.45;
+      letter-spacing:-0.015em;
+    }
+
+    .summary-card,.result-card,.person-card{
+      background:#fff;border:1px solid var(--line);border-radius:16px;
+      box-shadow:var(--shadow);
+    }
+    .summary-card{padding:18px}
+    .summary-row{
+      display:flex;justify-content:space-between;align-items:flex-start;
+      gap:18px;padding:12px 0;border-bottom:1px solid #EFF1EE;
+    }
+    .summary-row:last-child{border-bottom:0}
+    .summary-key{font-size:14px;color:var(--muted);font-weight:500}
+    .summary-val{font-size:15px;font-weight:600;text-align:right;max-width:66%}
+
+    .notice{
+      display:flex;gap:10px;align-items:flex-start;margin-top:16px;
+      padding:14px 15px;border-radius:12px;background:var(--yellowSoft);
+      color:#6D5718;font-size:13px;line-height:1.5;
+    }
+    .notice strong{font-weight:850}
+
+    .result-card{padding:20px;margin-top:18px}
+    .result-top{
+      display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;
+    }
+    .result-title{font-size:14px;font-weight:750;color:var(--green)}
+    .result-tools{display:flex;align-items:center;gap:8px}
+    .count{font-size:12px;color:var(--muted)}
+    .icon-action{
+      width:32px;
+      height:32px;
+      border:0;
+      background:transparent;
+      color:var(--green);
+      border-radius:8px;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      padding:0;
+    }
+    .icon-action:hover{background:var(--greenSoft)}
+    .icon-action:active{transform:scale(.96)}
+    .icon-action svg{width:18px;height:18px}
+    .message{
+      font-size:17px;line-height:1.72;letter-spacing:-.15px;white-space:pre-wrap;
+    }
+    .message.editable{
+      outline:none;
+      border:0;
+      background:transparent;
+    }
+    .message.editable:focus{
+      outline:none;
+      border:0;
+      background:transparent;
+      box-shadow:none;
+    }
+    .edit-helper{
+      margin:10px 0 0;color:#929B95;font-size:12px;line-height:1.4;
+    }
+
+    .bottom{
+      position:fixed;left:50%;transform:translateX(-50%);bottom:0;
+      width:min(480px,100%);
+      padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg,rgba(250,250,247,0),var(--bg) 30%,var(--bg));
+      z-index:40;
+    }
+    .next{
+      width:100%;border:0;border-radius:14px;padding:17px 18px;
+      font-size:16px;font-weight:850;cursor:pointer;background:var(--green);
+      color:#fff;box-shadow:0 8px 18px rgba(23,61,45,.14);
+    }
+    .next:disabled{
+      background:#DCE2DD;color:#9BA49E;box-shadow:none;cursor:default
+    }
+    .next:not(:disabled):active{transform:scale(.99)}
+
+    .hidden{display:none!important}
+
+    .toast{
+      position:fixed;left:50%;bottom:103px;transform:translate(-50%,12px);
+      background:#17251E;color:#fff;padding:11px 14px;border-radius:999px;
+      font-size:13px;font-weight:800;opacity:0;pointer-events:none;
+      transition:.2s;z-index:60;white-space:nowrap;
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+
+    /* 여러 명 모드 */
+    .batch-head{
+      display:flex;align-items:flex-start;justify-content:space-between;
+      gap:14px;margin-bottom:20px;
+    }
+    .batch-count{
+      flex:0 0 auto;background:var(--yellowSoft);color:#6D5718;
+      border-radius:999px;padding:8px 10px;font-size:12px;font-weight:850;
+    }
+    .person-card{padding:16px;margin-bottom:12px}
+    .person-top{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;
+    }
+    .person-no{font-size:14px;font-weight:850;color:var(--green)}
+    .remove{
+      border:0;background:transparent;color:#A0A8A2;
+      font-size:13px;font-weight:750;cursor:pointer;
+    }
+    .batch-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .batch-grid .input-wrap{border-radius:11px;padding:0 13px}
+    .batch-grid input,.batch-grid select{font-size:15px;padding:14px 0}
+    .batch-grid .select-wrap{position:relative;padding-right:34px}
+    .batch-grid .select-wrap::after{
+      content:"";
+      position:absolute;
+      right:14px;
+      top:50%;
+      width:7px;
+      height:7px;
+      border-right:1.6px solid #6E7D74;
+      border-bottom:1.6px solid #6E7D74;
+      transform:translateY(-65%) rotate(45deg);
+      pointer-events:none;
+    }
+    .batch-grid .select-wrap select{
+      cursor:pointer;
+      padding-right:2px;
+    }
+    .batch-grid .full{grid-column:1/-1}
+    .custom-batch-relation{margin-top:10px}
+    .add-person{
+      width:100%;
+      border:1px dashed #BAC6BE;
+      background:transparent;
+      color:var(--green);
+      border-radius:12px;
+      padding:15px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      margin-top:4px;
+      margin-bottom:0;
+    }
+    .batch-import-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:10px;
+    }
+    .excel-import{
+      width:100%;
+      border:1px solid #DDE3DE;
+      background:#fff;
+      color:var(--green);
+      border-radius:12px;
+      padding:14px 12px;
+      font-size:14px;
+      font-weight:650;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+    }
+    .excel-import:active{transform:scale(.99)}
+    .excel-import svg{width:17px;height:17px}
+    .excel-help{
+      margin:9px 2px 0;
+      color:#A8B0AB;
+      font-size:12px;
+      line-height:1.5;
+      letter-spacing:-0.015em;
+    }
+    .batch-actions{margin-top:16px}
+    .batch-generate{
+      width:100%;border:0;border-radius:14px;padding:17px 18px;
+      background:var(--green);color:#fff;font-size:16px;font-weight:850;cursor:pointer;
+    }
+    .batch-result{margin-bottom:14px}
+    .batch-result .result-card{margin-top:0}
+    .batch-result-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .batch-result-name{
+      font-size:16px;
+      font-weight:700;
+      letter-spacing:-0.02em;
+    }
+    .batch-result-tools{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .batch-count-text{
+      font-size:12px;
+      color:var(--muted);
+    }
+    .batch-icon{
+      width:30px;
+      height:30px;
+      border:0;
+      background:transparent;
+      color:var(--green);
+      border-radius:8px;
+      display:grid;
+      place-items:center;
+      padding:0;
+      cursor:pointer;
+    }
+    .batch-icon:hover{background:var(--greenSoft)}
+    .batch-icon:active{transform:scale(.96)}
+    .batch-icon svg{width:17px;height:17px}
+    .batch-message{
+      outline:none;
+      border:0;
+      background:transparent;
+      font-size:16px;
+      line-height:1.72;
+      letter-spacing:-0.015em;
+      white-space:pre-wrap;
+    }
+    .batch-message:focus{
+      outline:none;
+      border:0;
+      background:transparent;
+      box-shadow:none;
+    }
+    .copied-state{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      margin-top:10px;
+      font-size:12px;
+      color:#7D9A88;
+      font-weight:600;
+    }
+    .batch-note{
+      margin-top:8px;
+      color:#A8B0AB;
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    @media (min-width:700px){
+      .app{
+        margin-top:18px;min-height:calc(100vh - 36px);border-radius:20px;
+        box-shadow:0 20px 60px rgba(23,61,45,.08)
+      }
+      .topbar{border-radius:20px 20px 0 0}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="mode-switch">
+        <button id="batchModeBtn" class="active">여러 명</button>
+        <button id="singleModeBtn">한 명씩</button>
+      </div>
+
+
+      <div id="singleNav" class="hidden">
+        <div class="navrow">
+          <button class="back" id="backBtn" aria-label="이전 단계">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          <div class="nav-spacer"></div>
+          <div class="stepcount" id="stepCount">1/4</div>
+        </div>
+        <div class="progress segmented" id="progressBar" aria-label="진행 단계">
+          <span class="segment active"></span>
+          <span class="segment"></span>
+          <span class="segment"></span>
+          <span class="segment"></span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- 한 명씩 -->
+      <div id="singleFlow" class="hidden">
+        <section class="screen active" data-step="1">
+          <div class="label-line">
+            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true">
+              <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+              <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+              <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+              <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+              <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+              <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+            </svg>
+            받는 사람
+          </div>
+
+          <h1>누구에게<br>감사 인사를 보낼까요?</h1>
+          <p class="sub">받는 분의 이름과 평소 부르는 호칭을 알려주세요.</p>
+
+          <div id="senderSlotSingle">
+            <div class="sender-switch" id="senderSwitch" aria-label="작성자 선택">
+              <span class="sender-label">작성자</span>
+              <div class="sender-options">
+                <button id="groomBtn" class="active" type="button">신랑</button>
+                <button id="brideBtn" type="button">신부</button>
+              </div>
+            </div>
+          </div>
+
+          <label class="section-label" for="name">받는 분 이름</label>
+          <div class="input-wrap">
+            <input id="name" placeholder="예: 동민" autocomplete="off">
+          </div>
+
+          <label class="section-label" for="honorific">평소 부르는 호칭</label>
+          <div class="input-wrap">
+            <input id="honorific" placeholder="예: 동민아, 과장님, 이모" autocomplete="off">
+          </div>
+          <p class="helper">호칭을 입력하면 훨씬 자연스러운 문장이 나와요.</p>
+        </section>
+
+        <section class="screen" data-step="2">
+          <div class="label-line">
+            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true">
+              <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+              <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+              <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+              <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+              <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+              <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+            </svg>
+            관계
+          </div>
+
+          <h1>어떤 사이인가요?</h1>
+          <p class="sub">관계에 따라 말투와 거리감을 자연스럽게 조절할게요.</p>
+
+          <div class="chips" id="relationChips">
+            <button class="chip" data-value="친한 친구">친한 친구</button>
+            <button class="chip" data-value="친구·지인">친구·지인</button>
+            <button class="chip" data-value="친한 직장동료">친한 직장동료</button>
+            <button class="chip" data-value="직장동료">직장동료</button>
+            <button class="chip" data-value="직장상사">직장상사</button>
+            <button class="chip" data-value="친척">친척</button>
+            <button class="chip" data-value="어른">어른</button>
+            <button class="chip" data-value="부모님 지인">부모님 지인</button>
+            <button class="chip wide" data-value="기타">기타</button>
+          </div>
+
+          <div id="customRelationWrap" class="hidden">
+            <label class="section-label" for="customRelation">관계를 직접 적어주세요</label>
+            <div class="input-wrap">
+              <input id="customRelation" placeholder="예: 대학 선배, 예전 팀장님, 사촌누나">
+            </div>
+          </div>
+
+          <label class="section-label">말투는 어느 정도가 좋을까요?</label>
+          <div class="chips" id="toneChips">
+            <button class="chip" data-value="편하게">편하게</button>
+            <button class="chip selected" data-value="적당히">적당히</button>
+            <button class="chip" data-value="예의 있게">예의 있게</button>
+          </div>
+        </section>
+
+        <section class="screen" data-step="3">
+          <div class="label-line">
+            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true">
+              <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+              <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+              <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+              <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+              <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+              <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+            </svg>
+            거리
+          </div>
+
+          <h1>어디에서<br>와주셨나요?</h1>
+          <p class="sub">먼 길을 와준 분이라면 그 마음이 자연스럽게 드러나도록 반영할게요.</p>
+
+          <div class="chips" id="placeChips">
+            <button class="chip" data-value="울산">울산</button>
+            <button class="chip" data-value="부산">부산</button>
+            <button class="chip" data-value="경남">경남</button>
+            <button class="chip" data-value="서울">서울</button>
+            <button class="chip" data-value="경기·인천">경기·인천</button>
+            <button class="chip" data-value="기타">기타 지역</button>
+          </div>
+
+          <div id="customPlaceWrap" class="hidden">
+            <label class="section-label" for="customPlace">지역 직접 입력</label>
+            <div class="input-wrap">
+              <input id="customPlace" placeholder="예: 대전, 제주, 창원">
+            </div>
+          </div>
+
+          <label class="section-label" for="memo">
+            기억해두고 싶은 내용
+            <span style="color:var(--muted);font-weight:700">(선택)</span>
+          </label>
+          <div class="input-wrap">
+            <textarea id="memo" placeholder="예: 결혼 준비할 때 많이 도와줌&#10;오랜만에 만나서 더 반가웠음"></textarea>
+          </div>
+          <p class="helper">메모는 그대로 옮기지 않고, 결혼식이 끝난 시점에 맞게 자연스럽게 바꿔서 녹일 거예요.</p>
+        </section>
+
+        <section class="screen" data-step="4">
+          <div class="label-line">
+            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true">
+              <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+              <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+              <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+              <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+              <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+              <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+            </svg>
+            한번 더 확인
+          </div>
+
+          <h1>이렇게 맞을까요?</h1>
+          <p class="sub">입력한 내용을 한번 확인하고 감사 인사를 만들어보세요.</p>
+
+          <div class="summary-card">
+            <div class="summary-row">
+              <span class="summary-key">작성자</span>
+              <span class="summary-val" id="sumSenderRole">신랑</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-key">받는 사람</span>
+              <span class="summary-val" id="sumName">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-key">관계</span>
+              <span class="summary-val" id="sumRelation">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-key">거리</span>
+              <span class="summary-val" id="sumPlace">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-key">추가 메모</span>
+              <span class="summary-val" id="sumMemo">없음</span>
+            </div>
+          </div>
+
+          <div class="notice">
+            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true" style="width:22px;height:22px">
+              <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+              <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+              <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+              <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+              <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+              <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+            </svg>
+            <div>
+              <strong>여기서는 AI를 직접 호출하지 않아요.</strong><br>
+              입력한 메모의 시점까지 결혼식 이후 관점에 맞게 해석하도록 프롬프트를 만들어줘요.
+            </div>
+          </div>
+        </section>
+
+        <section class="screen" data-step="result">
+          <div class="label-line">
+            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true">
+              <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+              <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+              <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+              <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+              <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+              <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+            </svg>
+            완성
+          </div>
+
+          <h1><span id="resultName">동민</span>님 감사인사용<br>프롬프트가 완성됐어요.</h1>
+          <p class="sub">필요하면 문구를 조금 손본 뒤 그대로 복사해 ChatGPT에 붙여넣으면 돼요.</p>
+
+          <div class="result-card">
+            <div class="result-top">
+              <div class="result-title">ChatGPT용 프롬프트</div>
+              <div class="result-tools">
+                <div class="count" id="charCount">0자</div>
+                <button class="icon-action hidden" id="undoBtn"
+                        aria-label="수정 전 프롬프트로 되돌리기" title="되돌리기">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 7H5V3"></path>
+                    <path d="M5.5 7.5A8 8 0 1 1 4 15"></path>
+                  </svg>
+                </button>
+                <button class="icon-action" id="copyBtn" aria-label="프롬프트 복사하기" title="복사">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="8" y="8" width="10" height="10" rx="1.8"></rect>
+                    <path d="M16 8V6.7A1.7 1.7 0 0 0 14.3 5H6.7A1.7 1.7 0 0 0 5 6.7v7.6A1.7 1.7 0 0 0 6.7 16H8"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="message editable" id="resultMessage" contenteditable="true"
+                 role="textbox" aria-multiline="true" spellcheck="true"></div>
+            <p class="edit-helper">문구를 눌러 직접 수정할 수 있어요.</p>
+          </div>
+
+        </section>
+      </div>
+
+      <!-- 여러 명 -->
+      <section id="batchFlow">
+        <div class="batch-head">
+          <div>
+            <div class="label-line">
+              <svg class="flower" viewBox="0 0 28 28" aria-hidden="true">
+                <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
+                <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
+                <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
+                <ellipse cx="9.5" cy="20" rx="4.3" ry="6" transform="rotate(216 9.5 20)" fill="#F7C948"/>
+                <ellipse cx="6.8" cy="11.5" rx="4.3" ry="6" transform="rotate(288 6.8 11.5)" fill="#F7C948"/>
+                <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
+              </svg>
+              여러 명
+            </div>
+            <h1 style="margin-bottom:8px">여러 명에게 감사 인사를<br>한 번에 작성해요.</h1>
+            <p class="sub" style="margin-bottom:0">최대 10명까지 입력한 뒤 한 번에 복사할 프롬프트를 만들 수 있어요.</p>
+          </div>
+          <div class="batch-count" id="batchCount">1/10명</div>
+        </div>
+
+        <div id="senderSlotBatch"></div>
+
+        <div id="peopleList"></div>
+
+        <button class="add-person" id="addPersonBtn">+ 한 명 더 추가하기</button>
+
+        <div class="batch-import-row">
+          <button class="excel-import" id="excelTemplateBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 4v11"></path>
+              <path d="M8 11l4 4 4-4"></path>
+              <path d="M5 20h14"></path>
+            </svg>
+            엑셀 양식 다운로드
+          </button>
+
+          <button class="excel-import" id="excelImportBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20V9"></path>
+              <path d="M8 13l4-4 4 4"></path>
+              <path d="M5 4h14"></path>
+            </svg>
+            엑셀 불러오기
+          </button>
+        </div>
+        <input id="excelFileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden">
+
+        <div class="batch-actions">
+          <button class="batch-generate" id="batchGenerateBtn">한꺼번에 프롬프트 만들기</button>
+        </div>
+
+        <div id="batchResults" class="hidden" style="margin-top:28px">
+          <h1 style="font-size:24px;margin-bottom:8px;font-weight:750">프롬프트가 완성됐어요.</h1>
+          <p class="sub" style="margin-bottom:20px">이 프롬프트 하나를 복사해서 ChatGPT에 붙여넣으면 사람별 감사 인사를 한꺼번에 받을 수 있어요.</p>
+          <div id="batchResultList"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="bottom hidden" id="bottomBar">
+      <button class="next" id="nextBtn" disabled>다음</button>
+    </div>
+
+    <div class="toast" id="toast">복사했어요</div>
+  </div>
+
+  <script>
+    const state = {
+      step:1,
+      senderRole:"신랑",
+      name:"",
+      honorific:"",
+      relation:"",
+      customRelation:"",
+      tone:"적당히",
+      place:"",
+      customPlace:"",
+      memo:""
+    };
+
+    const screens = [...document.querySelectorAll("#singleFlow .screen")];
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const progressBar = document.getElementById("progressBar");
+    const progressSegments = [...progressBar.querySelectorAll(".segment")];
+    const stepCount = document.getElementById("stepCount");
+    const bottomBar = document.getElementById("bottomBar");
+    const singleNav = document.getElementById("singleNav");
+
+    const groomBtn = document.getElementById("groomBtn");
+    const brideBtn = document.getElementById("brideBtn");
+
+    function setSenderRole(role){
+      state.senderRole = role;
+      groomBtn.classList.toggle("active", role==="신랑");
+      brideBtn.classList.toggle("active", role==="신부");
+    }
+
+    function moveSenderSelector(mode){
+      const senderSwitch=document.getElementById("senderSwitch");
+      const target = mode==="batch"
+        ? document.getElementById("senderSlotBatch")
+        : document.getElementById("senderSlotSingle");
+      if(senderSwitch && target) target.appendChild(senderSwitch);
+    }
+
+    groomBtn.addEventListener("click",()=>setSenderRole("신랑"));
+    brideBtn.addEventListener("click",()=>setSenderRole("신부"));
+
+    const nameInput = document.getElementById("name");
+    const honorificInput = document.getElementById("honorific");
+    const customRelationInput = document.getElementById("customRelation");
+    const customPlaceInput = document.getElementById("customPlace");
+    const memoInput = document.getElementById("memo");
+
+    function relationValue(){
+      return state.relation==="기타" ? state.customRelation : state.relation;
+    }
+    function placeValue(){
+      return state.place==="기타" ? state.customPlace : state.place;
+    }
+
+    function selectOne(containerId,key,afterSelect){
+      const wrap=document.getElementById(containerId);
+      wrap.querySelectorAll(".chip").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          wrap.querySelectorAll(".chip").forEach(b=>b.classList.remove("selected"));
+          btn.classList.add("selected");
+          state[key]=btn.dataset.value;
+          if(afterSelect) afterSelect(btn.dataset.value);
+          validate();
+        });
+      });
+    }
+
+    nameInput.addEventListener("input",()=>{state.name=nameInput.value.trim();validate()});
+    honorificInput.addEventListener("input",()=>{state.honorific=honorificInput.value.trim();validate()});
+    customRelationInput.addEventListener("input",()=>{state.customRelation=customRelationInput.value.trim();validate()});
+    customPlaceInput.addEventListener("input",()=>{state.customPlace=customPlaceInput.value.trim();validate()});
+    memoInput.addEventListener("input",()=>{state.memo=memoInput.value.trim()});
+
+    selectOne("relationChips","relation",(v)=>{
+      document.getElementById("customRelationWrap").classList.toggle("hidden",v!=="기타");
+      if(v!=="기타") state.customRelation="";
+    });
+    selectOne("toneChips","tone");
+    selectOne("placeChips","place",(v)=>{
+      document.getElementById("customPlaceWrap").classList.toggle("hidden",v!=="기타");
+      if(v!=="기타") state.customPlace="";
+    });
+
+    function validate(){
+      if(state.step===1){
+        nextBtn.disabled=!(state.name && state.honorific);
+      }else if(state.step===2){
+        nextBtn.disabled=!(state.relation && (state.relation!=="기타" || state.customRelation));
+      }else if(state.step===3){
+        nextBtn.disabled=!(state.place && (state.place!=="기타" || state.customPlace));
+      }else if(state.step===4){
+        nextBtn.disabled=false;
+      }
+    }
+
+    function showStep(step){
+      state.step=step;
+      screens.forEach(s=>s.classList.remove("active"));
+      document.querySelector(`#singleFlow [data-step="${step}"]`).classList.add("active");
+
+      if(step==="result"){
+        progressSegments.forEach(seg=>seg.classList.add("active"));
+        stepCount.textContent="완료";
+        bottomBar.classList.add("hidden");
+        backBtn.classList.remove("hidden");
+        return;
+      }
+
+      bottomBar.classList.remove("hidden");
+      stepCount.textContent=`${step}/4`;
+      progressSegments.forEach((seg,i)=>{
+        seg.classList.toggle("active", i < step);
+      });
+      backBtn.classList.toggle("hidden", step===1);
+      nextBtn.textContent=step===4?"프롬프트 만들기":"다음";
+      validate();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+
+    function updateSummary(){
+      document.getElementById("sumSenderRole").textContent=state.senderRole;
+      document.getElementById("sumName").textContent=`${state.name} · ${state.honorific}`;
+      document.getElementById("sumRelation").textContent=`${relationValue()} · ${state.tone}`;
+      document.getElementById("sumPlace").textContent=placeValue();
+      document.getElementById("sumMemo").textContent=state.memo||"없음";
+    }
+
+    nextBtn.addEventListener("click",()=>{
+      if(state.step<4){
+        const next=state.step+1;
+        if(next===4) updateSummary();
+        showStep(next);
+        return;
+      }
+
+      renderResultMessage(buildSinglePrompt());
+      showStep("result");
+    });
+
+    backBtn.addEventListener("click",()=>{
+      if(state.step==="result"){showStep(4);return}
+      if(state.step>1) showStep(state.step-1);
+    });
+
+    function isFar(place){
+      if(!place) return false;
+      return !["울산","부산","경남","창원","김해","양산"].some(x=>place.includes(x));
+    }
+
+    function demoMessage(mode="rewrite",data=state){
+      const rel=data.relation==="기타" ? data.customRelation : data.relation;
+      const place=data.place==="기타" ? data.customPlace : data.place;
+      const call=data.honorific || data.name;
+      const resolvedTone=data.tone || autoToneByRelation(rel);
+      const formal=["직장상사","어른","부모님 지인"].includes(rel) || resolvedTone==="예의 있게";
+      const far=isFar(place);
+
+      let text;
+      if(formal){
+        text=`${call}, 바쁘신 와중에도 결혼식에 함께해주셔서 정말 감사드립니다. ${far?`${place}에서 먼 길 와주신 마음까지 더해져 `:""}덕분에 저희에게 더욱 뜻깊은 하루가 되었습니다. ${data.memo?`${data.memo.replace(/[.!?]+$/,"")} 점도 감사한 마음으로 오래 기억하겠습니다. `:""}보내주신 축하와 마음 감사히 간직하며 두 사람 잘 살아가겠습니다.`;
+      }else{
+        text=`${call}, 결혼식 와줘서 진짜 고마워! ${far?`${place}에서 울산까지 와준 것도 정말 고마웠고, `:""}정신없이 하루가 지나갔는데 식장에서 얼굴 보니까 괜히 더 반갑고 든든하더라ㅎㅎ ${data.memo?`${data.memo.replace(/[.!?]+$/,"")} 것도 생각나서 더 고마웠어. `:""}덕분에 좋은 하루로 잘 마무리했어. 조만간 또 편하게 보자!`;
+      }
+
+      if(mode==="simple"){
+        text=formal
+          ? `${call}, 결혼식에 와서 축하해주셔서 정말 감사드립니다. ${far?`${place}에서 먼 길 와주셔서 더 감사했습니다. `:""}덕분에 저희에게 의미 있는 하루가 되었습니다. 보내주신 마음 감사히 간직하며 잘 살아가겠습니다.`
+          : `${call}, 결혼식 와줘서 정말 고마워. ${far?`${place}에서 여기까지 와준 것도 정말 고마웠어. `:""}정신없는 날이었는데 얼굴 보니까 더 반갑더라. 덕분에 잘 마무리했어. 조만간 또 보자!`;
+      }else if(mode==="friendly" && !formal){
+        text=`${call} 진짜 와줘서 너무 고맙다ㅎㅎ ${far?`${place}에서 울산까지 오는 것도 쉬운 일 아닌데 직접 와줘서 더 고마웠어. `:""}결혼식 날 정신 하나도 없었는데 네 얼굴 보니까 괜히 마음 놓이더라. ${data.memo?`${data.memo.replace(/[.!?]+$/,"")} 것도 생각나서 더 고마웠고! `:""}덕분에 잘 끝냈다. 다음에 만나서 밥 먹자!`;
+      }else if(mode==="formal"){
+        text=`${call}, 귀한 시간 내어 결혼식에 참석해주셔서 진심으로 감사드립니다. ${far?`${place}에서 먼 길 와주신 점도 정말 감사했습니다. `:""}직접 축하해주신 덕분에 더욱 뜻깊고 감사한 하루가 되었습니다. 보내주신 마음 잊지 않고 두 사람 서로 아끼며 잘 살아가겠습니다.`;
+      }else if(mode==="short"){
+        text=formal
+          ? `${call}, 결혼식에 참석해 축하해주셔서 정말 감사드립니다. ${far?`${place}에서 먼 길 와주셔서 더 감사했습니다. `:""}보내주신 마음 감사히 간직하며 두 사람 잘 살아가겠습니다.`
+          : `${call}, 결혼식 와줘서 진짜 고마워! ${far?`${place}에서 여기까지 와줘서 더 고마웠어. `:""}정신없는 날이었는데 얼굴 보니까 정말 반갑더라ㅎㅎ 덕분에 잘 마무리했어. 조만간 보자!`;
+      }
+      return text;
+    }
+
+    let originalGeneratedMessage = "";
+
+    function promptRules(){
+      return [
+        "한국 결혼식에 실제로 참석해 준 사람에게 보내는 카카오톡 감사 인사를 작성해줘.",
+        "중요: 이 감사 인사는 결혼식이 모두 끝난 뒤 보내는 메시지야. 결혼식과 참석에 관한 표현은 반드시 결혼식 이후 시점에 맞춰 작성해줘.",
+        "약 280~330자 안팎으로, 대략 300자 정도가 되도록 자연스럽게 작성해줘.",
+        "입력 정보를 단순 나열하거나 템플릿처럼 이어 붙이지 말고 전체 문장을 새롭게 구성해줘.",
+        "관계와 친밀도에 맞춰 반말/존댓말과 거리감을 자연스럽게 조절해줘.",
+        "작성자가 신랑인지 신부인지에 따라 말투의 결을 아주 자연스럽게 조절해줘. 다만 성별 고정관념을 과장하지 말고, 신랑은 조금 더 간결하고 편한 구어체, 신부는 조금 더 부드럽고 다정한 구어체를 기본 방향으로 참고해줘.",
+        "출발지가 울산·부산·경남권이면 '먼 길' 같은 표현을 억지로 쓰지 말아줘.",
+        "서울·경기·인천 등 먼 지역이면 이동해 준 수고를 한 번 정도 자연스럽게 반영해줘.",
+        "추가 메모는 결혼식 전에 적어둔 메모일 수도 있어. 메모 속 '처음 볼 것 같음', '만날 예정', '도와줄 예정' 같은 미래형 표현을 그대로 쓰지 말고, 결혼식이 이미 끝난 현재 시점에 맞게 과거형이나 완료된 맥락으로 자연스럽게 바꿔줘.",
+        "예를 들어 '결혼식 때 광이를 처음 볼 것 같음'이라고 적혀 있다면 '이번에 결혼식에서 광이도 처음 봤을 텐데'처럼 결혼식 이후 시점으로 자연스럽게 해석해줘.",
+        "추가 메모가 있으면 문장을 그대로 복사하지 말고 의미와 분위기만 자연스럽게 녹여줘.",
+        "감사의 마무리에는 관계에 맞는 경우 '앞으로 둘이 잘 살겠다', '덕분에 행복하게 잘 살겠다', '신혼여행 다녀오면 또 만나자/만나요', '앞으로도 건강하게 지내자/건강합시다' 같은 내용을 자연스럽게 활용해줘.",
+        "단, 위 마무리 표현을 한 메시지에 전부 넣거나 매번 똑같이 반복하지 말고, 사람과 관계에 맞는 1~2개만 골라 자연스럽게 변형해줘.",
+        "과하게 감동적이거나 오글거리는 문체는 피하고 실제 카카오톡처럼 담백하게 써줘.",
+        "'귀한 발걸음', '성원에 보답', '평생 잊지 않겠습니다', '저희 두 사람의 앞날을 축복해주셔서' 같은 전형적인 답례 문구는 피해주세요.",
+        "설명이나 해설 없이 최종 메시지만 작성해줘."
+      ];
+    }
+
+    function buildSinglePrompt(){
+      const info = [
+        `작성자: ${state.senderRole}`,
+        `이름: ${state.name}`,
+        `평소 부르는 호칭: ${state.honorific}`,
+        `관계: ${relationValue()}`,
+        `말투: ${state.tone}`,
+        `출발지: ${placeValue()}`,
+        `추가 메모: ${state.memo || "없음"}`
+      ];
+
+      return `${promptRules().join("\n")}\n\n[받는 사람 정보]\n${info.join("\n")}`;
+    }
+
+    function updateCharCount(){
+      const text=document.getElementById("resultMessage").innerText.trim();
+      document.getElementById("charCount").textContent=`${text.length}자`;
+    }
+
+    function updateUndoVisibility(){
+      const current=document.getElementById("resultMessage").innerText.trim();
+      document.getElementById("undoBtn").classList.toggle(
+        "hidden",
+        current === originalGeneratedMessage
+      );
+    }
+
+    function renderResultMessage(msg){
+      document.getElementById("resultName").textContent=state.name;
+      document.getElementById("resultMessage").textContent=msg;
+      originalGeneratedMessage = msg;
+      updateCharCount();
+      updateUndoVisibility();
+    }
+
+    document.getElementById("resultMessage").addEventListener("input",()=>{
+      updateCharCount();
+      updateUndoVisibility();
+    });
+
+    document.getElementById("undoBtn").addEventListener("click",()=>{
+      document.getElementById("resultMessage").textContent = originalGeneratedMessage;
+      updateCharCount();
+      updateUndoVisibility();
+    });
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+      }catch(e){
+        const ta=document.createElement("textarea");
+        ta.value=text;document.body.appendChild(ta);ta.select();
+        document.execCommand("copy");ta.remove();
+      }
+      const toast=document.getElementById("toast");
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"),1400);
+    }
+
+    document.getElementById("copyBtn").addEventListener("click",()=>{
+      copyText(document.getElementById("resultMessage").innerText.trim());
+    });
+
+    /* 모드 전환 */
+    const singleModeBtn=document.getElementById("singleModeBtn");
+    const batchModeBtn=document.getElementById("batchModeBtn");
+    const singleFlow=document.getElementById("singleFlow");
+    const batchFlow=document.getElementById("batchFlow");
+
+    singleModeBtn.addEventListener("click",()=>{
+      singleModeBtn.classList.add("active");
+      batchModeBtn.classList.remove("active");
+      singleFlow.classList.remove("hidden");
+      batchFlow.classList.add("hidden");
+      singleNav.classList.remove("hidden");
+      moveSenderSelector("single");
+      if(state.step==="result") bottomBar.classList.add("hidden");
+      else bottomBar.classList.remove("hidden");
+    });
+
+    batchModeBtn.addEventListener("click",()=>{
+      batchModeBtn.classList.add("active");
+      singleModeBtn.classList.remove("active");
+      batchFlow.classList.remove("hidden");
+      singleFlow.classList.add("hidden");
+      singleNav.classList.add("hidden");
+      moveSenderSelector("batch");
+      bottomBar.classList.add("hidden");
+    });
+
+    /* 여러 명 모드 */
+    const relationOptions=["친한 친구","친구·지인","친한 직장동료","직장동료","직장상사","친척","어른","부모님 지인","기타"];
+    const placeOptions=["울산","부산","경남","서울","경기·인천","기타"];
+
+    let people=[newPerson()];
+
+    function autoToneByRelation(relation){
+      if(["친한 친구","친한 직장동료"].includes(relation)) return "편하게";
+      if(["직장상사","어른","부모님 지인"].includes(relation)) return "예의 있게";
+      return "적당히";
+    }
+
+    function newPerson(){
+      return {
+        name:"",
+        honorific:"",
+        relation:"친구·지인",
+        customRelation:"",
+        place:"울산",
+        customPlace:"",
+        memo:""
+      };
+    }
+
+    function esc(v){
+      return String(v??"").replace(/[&<>"']/g,m=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[m]));
+    }
+
+
+    function downloadExcelTemplate(){
+      if(typeof XLSX==="undefined"){
+        alert("엑셀 모듈을 불러오지 못했어요. 인터넷 연결을 확인해주세요.");
+        return;
+      }
+
+      const inputRows = [
+        ["이름","호칭","관계","출발지","메모"],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""],
+        ["","","","",""]
+      ];
+
+      const exampleRows = [
+        ["항목","예시 / 안내"],
+        ["이름","동민"],
+        ["호칭","동민햄"],
+        ["관계","친한 친구 / 친구·지인 / 친한 직장동료 / 직장동료 / 직장상사 / 친척 / 어른 / 부모님 지인 / 그 외 관계 직접 입력"],
+        ["출발지","서울 / 울산 / 부산 / 경남 / 수원 등 실제 출발 지역"],
+        ["메모","축가 도와줌, 같이 야구 직관한 적 있음 등 문장으로 만들 때 참고할 내용"],
+        ["안내","첫 번째 시트 '하객 입력'에 최대 10명까지 작성한 뒤 웹에서 불러오면 됩니다."]
+      ];
+
+      const wb = XLSX.utils.book_new();
+      const wsInput = XLSX.utils.aoa_to_sheet(inputRows);
+      const wsExample = XLSX.utils.aoa_to_sheet(exampleRows);
+
+      wsInput["!cols"] = [
+        {wch:14},
+        {wch:16},
+        {wch:20},
+        {wch:16},
+        {wch:42}
+      ];
+      wsExample["!cols"] = [
+        {wch:16},
+        {wch:64}
+      ];
+
+      XLSX.utils.book_append_sheet(wb, wsInput, "하객 입력");
+      XLSX.utils.book_append_sheet(wb, wsExample, "작성 안내");
+      XLSX.writeFile(wb, "결혼식_감사인사_입력양식.xlsx");
+    }
+
+    function normalizeHeader(value){
+      return String(value ?? "")
+        .trim()
+        .replace(/\s+/g,"")
+        .replace(/[()]/g,"")
+        .toLowerCase();
+    }
+
+    function pickRowValue(row, aliases){
+      const entries=Object.entries(row || {});
+      for(const alias of aliases){
+        const target=normalizeHeader(alias);
+        const found=entries.find(([key])=>normalizeHeader(key)===target);
+        if(found && String(found[1] ?? "").trim()) return String(found[1]).trim();
+      }
+      return "";
+    }
+
+    function mapRelation(value){
+      const v=String(value || "").trim();
+      if(!v) return {relation:"친구·지인",customRelation:""};
+      if(relationOptions.includes(v) && v!=="기타"){
+        return {relation:v,customRelation:""};
+      }
+      return {relation:"기타",customRelation:v};
+    }
+
+    function mapPlace(value){
+      const v=String(value || "").trim();
+      if(!v) return {place:"울산",customPlace:""};
+
+      if(v.includes("울산")) return {place:"울산",customPlace:""};
+      if(v.includes("부산")) return {place:"부산",customPlace:""};
+      if(v==="경남" || v.includes("경상남")) return {place:"경남",customPlace:""};
+      if(v.includes("서울")) return {place:"서울",customPlace:""};
+      if(v.includes("경기") || v.includes("인천")) return {place:"경기·인천",customPlace:""};
+
+      return {place:"기타",customPlace:v};
+    }
+
+    function rowToPerson(row){
+      const name=pickRowValue(row,["이름","받는분이름","받는사람","성명","name"]);
+      const honorific=pickRowValue(row,["호칭","평소부르는호칭","부르는호칭","honorific"]);
+      const relationRaw=pickRowValue(row,["관계","사이","relationship"]);
+      const placeRaw=pickRowValue(row,["출발지","지역","거리","출발지역","place"]);
+      const memo=pickRowValue(row,["메모","추가메모","추가내용","비고","memo"]);
+
+      if(!name && !honorific && !relationRaw && !placeRaw && !memo) return null;
+
+      const relationMapped=mapRelation(relationRaw);
+      const placeMapped=mapPlace(placeRaw);
+
+      return {
+        name,
+        honorific:honorific || name,
+        relation:relationMapped.relation,
+        customRelation:relationMapped.customRelation,
+        place:placeMapped.place,
+        customPlace:placeMapped.customPlace,
+        memo
+      };
+    }
+
+    async function importExcelFile(file){
+      if(typeof XLSX==="undefined"){
+        alert("엑셀 불러오기 모듈을 불러오지 못했어요. 인터넷 연결을 확인해주세요.");
+        return;
+      }
+
+      try{
+        const buffer=await file.arrayBuffer();
+        const workbook=XLSX.read(buffer,{type:"array"});
+        const firstSheet=workbook.Sheets[workbook.SheetNames[0]];
+        const rows=XLSX.utils.sheet_to_json(firstSheet,{defval:""});
+
+        const imported=rows
+          .map(rowToPerson)
+          .filter(Boolean)
+          .slice(0,10);
+
+        if(imported.length===0){
+          alert("불러올 사람이 없어요. 첫 행의 컬럼명을 확인해주세요.");
+          return;
+        }
+
+        people=imported;
+        renderPeople();
+    moveSenderSelector("batch");
+
+        const skipped=Math.max(0, rows.filter(r=>rowToPerson(r)).length-10);
+        alert(
+          skipped>0
+            ? `10명까지 불러왔어요. 나머지 ${skipped}명은 제외됐어요.`
+            : `${imported.length}명을 불러왔어요.`
+        );
+      }catch(error){
+        console.error(error);
+        alert("엑셀 파일을 읽지 못했어요. 파일 형식과 컬럼명을 확인해주세요.");
+      }finally{
+        document.getElementById("excelFileInput").value="";
+      }
+    }
+
+    function renderPeople(){
+      const list=document.getElementById("peopleList");
+      list.innerHTML=people.map((p,i)=>`
+        <div class="person-card" data-index="${i}">
+          <div class="person-top">
+            <div class="person-no">${i+1}번째 사람</div>
+            ${people.length>1?`<button class="remove" data-remove="${i}">삭제</button>`:""}
+          </div>
+
+          <div class="batch-grid">
+            <div class="input-wrap">
+              <input data-field="name" data-index="${i}" value="${esc(p.name)}" placeholder="이름">
+            </div>
+            <div class="input-wrap">
+              <input data-field="honorific" data-index="${i}" value="${esc(p.honorific)}" placeholder="호칭">
+            </div>
+
+            <div class="input-wrap select-wrap">
+              <select data-field="relation" data-index="${i}">
+                ${relationOptions.map(v=>`<option value="${v}" ${p.relation===v?"selected":""}>${v}</option>`).join("")}
+              </select>
+            </div>
+
+            <div class="input-wrap select-wrap">
+              <select data-field="place" data-index="${i}">
+                ${placeOptions.map(v=>`<option value="${v}" ${p.place===v?"selected":""}>${v==="기타"?"기타 지역":v}</option>`).join("")}
+              </select>
+            </div>
+
+            <div class="input-wrap full">
+              <input data-field="memo" data-index="${i}" value="${esc(p.memo)}" placeholder="메모 (선택)">
+            </div>
+          </div>
+
+          <div class="custom-batch-relation ${p.relation==="기타"?"":"hidden"}">
+            <div class="input-wrap">
+              <input data-field="customRelation" data-index="${i}" value="${esc(p.customRelation)}" placeholder="관계 직접 입력">
+            </div>
+          </div>
+
+          <div class="custom-batch-place ${p.place==="기타"?"":"hidden"}" style="margin-top:10px">
+            <div class="input-wrap">
+              <input data-field="customPlace" data-index="${i}" value="${esc(p.customPlace)}" placeholder="지역 직접 입력">
+            </div>
+          </div>
+          <div class="batch-note">말투는 관계에 맞춰 자동으로 조절해요.</div>
+        </div>
+      `).join("");
+
+      document.getElementById("batchCount").textContent=`${people.length}/10명`;
+      document.getElementById("addPersonBtn").disabled=people.length>=10;
+      document.getElementById("addPersonBtn").style.opacity=people.length>=10?".45":"1";
+
+      list.querySelectorAll("[data-field]").forEach(el=>{
+        el.addEventListener("input",e=>{
+          const i=Number(e.target.dataset.index);
+          const field=e.target.dataset.field;
+          people[i][field]=e.target.value;
+          if(field==="relation" || field==="place") renderPeople();
+        });
+        el.addEventListener("change",e=>{
+          const i=Number(e.target.dataset.index);
+          const field=e.target.dataset.field;
+          people[i][field]=e.target.value;
+          if(field==="relation" || field==="place") renderPeople();
+        });
+      });
+
+      list.querySelectorAll("[data-remove]").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          people.splice(Number(btn.dataset.remove),1);
+          renderPeople();
+        });
+      });
+    }
+
+    document.getElementById("addPersonBtn").addEventListener("click",()=>{
+      if(people.length>=10) return;
+      people.push(newPerson());
+      renderPeople();
+      setTimeout(()=>{
+        const cards=document.querySelectorAll(".person-card");
+        cards[cards.length-1].scrollIntoView({behavior:"smooth",block:"center"});
+      },30);
+    });
+
+    document.getElementById("batchGenerateBtn").addEventListener("click",()=>{
+      const invalid=people.findIndex(p=>{
+        const rel=p.relation==="기타"?p.customRelation:p.relation;
+        const place=p.place==="기타"?p.customPlace:p.place;
+        return !p.name || !p.honorific || !rel || !place;
+      });
+      if(invalid>=0){
+        alert(`${invalid+1}번째 사람의 이름, 호칭, 관계, 지역을 확인해주세요.`);
+        return;
+      }
+      renderBatchPrompt();
+    });
+
+    let batchOriginalPrompt = "";
+
+    function buildBatchPrompt(){
+      const peopleText = people.map((p,i)=>{
+        const rel=p.relation==="기타"?p.customRelation:p.relation;
+        const place=p.place==="기타"?p.customPlace:p.place;
+        const tone=autoToneByRelation(rel);
+
+        return [
+          `${i+1}. ${p.name}`,
+          `- 호칭: ${p.honorific}`,
+          `- 관계: ${rel}`,
+          `- 말투: ${tone}`,
+          `- 출발지: ${place}`,
+          `- 추가 메모: ${p.memo || "없음"}`
+        ].join("\n");
+      }).join("\n\n");
+
+      return [
+        `아래 사람들에게 각각 결혼식 참석 감사 인사를 작성해줘. 작성자는 ${state.senderRole}이야.`,
+        "",
+        ...promptRules().slice(0,-1),
+        `모든 메시지는 ${state.senderRole}이 직접 작성한 것처럼 자연스럽게 느껴지도록 말투의 결을 맞춰줘.`,
+        "각 사람마다 서로 다른 문장 구조와 시작·마무리 표현을 사용해서 복사한 티가 나지 않게 해줘.",
+        "추가 메모에 결혼식 전 시점의 표현이 섞여 있어도, 각 메시지는 반드시 결혼식이 끝난 뒤의 시점으로 자연스럽게 바꿔줘.",
+        "마무리도 사람마다 다르게 해줘. 잘 살겠다는 말, 신혼여행 후 다시 보자는 말, 건강하게 지내자는 말 등을 관계에 맞게 골라 쓰되 반복하지 말아줘.",
+        "결과는 반드시 사람별로 이름을 제목처럼 먼저 쓰고, 그 아래에 최종 메시지만 적어줘.",
+        "",
+        "[받는 사람 목록]",
+        peopleText
+      ].join("\n");
+    }
+
+    function renderBatchPrompt(){
+      const prompt=buildBatchPrompt();
+      batchOriginalPrompt=prompt;
+
+      const wrap=document.getElementById("batchResultList");
+      wrap.innerHTML=`
+        <div class="batch-result">
+          <div class="result-card">
+            <div class="batch-result-head">
+              <div class="batch-result-name">${people.length}명용 프롬프트</div>
+              <div class="batch-result-tools">
+                <span class="batch-count-text" id="batchPromptCount">${prompt.length}자</span>
+                <button class="batch-icon hidden" id="batchUndoBtn" aria-label="되돌리기" title="되돌리기">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 7H5V3"></path>
+                    <path d="M5.5 7.5A8 8 0 1 1 4 15"></path>
+                  </svg>
+                </button>
+                <button class="batch-icon" id="batchCopyBtn" aria-label="복사" title="복사">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="8" y="8" width="10" height="10" rx="1.8"></rect>
+                    <path d="M16 8V6.7A1.7 1.7 0 0 0 14.3 5H6.7A1.7 1.7 0 0 0 5 6.7v7.6A1.7 1.7 0 0 0 6.7 16H8"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="batch-message" id="batchPromptMessage" contenteditable="true"
+                 role="textbox" aria-multiline="true" spellcheck="true">${esc(prompt)}</div>
+            <div class="copied-state hidden" id="batchCopiedState">✓ 복사 완료</div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("batchResults").classList.remove("hidden");
+
+      const msg=document.getElementById("batchPromptMessage");
+      const undo=document.getElementById("batchUndoBtn");
+      const count=document.getElementById("batchPromptCount");
+      const copied=document.getElementById("batchCopiedState");
+
+      msg.addEventListener("input",()=>{
+        const current=msg.innerText.trim();
+        count.textContent=`${current.length}자`;
+        undo.classList.toggle("hidden",current===batchOriginalPrompt);
+        copied.classList.add("hidden");
+      });
+
+      undo.addEventListener("click",()=>{
+        msg.textContent=batchOriginalPrompt;
+        count.textContent=`${batchOriginalPrompt.length}자`;
+        undo.classList.add("hidden");
+        copied.classList.add("hidden");
+      });
+
+      document.getElementById("batchCopyBtn").addEventListener("click",()=>{
+        copyText(msg.innerText.trim());
+        copied.classList.remove("hidden");
+      });
+
+      setTimeout(()=>{
+        document.getElementById("batchResults").scrollIntoView({behavior:"smooth",block:"start"});
+      },50);
+    }
+
+    document.getElementById("excelTemplateBtn").addEventListener("click",()=>{
+      downloadExcelTemplate();
+    });
+
+    document.getElementById("excelImportBtn").addEventListener("click",()=>{
+      document.getElementById("excelFileInput").click();
+    });
+
+    document.getElementById("excelFileInput").addEventListener("change",(event)=>{
+      const file=event.target.files?.[0];
+      if(file) importExcelFile(file);
+    });
+
+    renderPeople();
+  </script>
+</body>
+</html>
