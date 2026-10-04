@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -1251,7 +1252,6 @@
 
         people=imported;
         renderPeople();
-    moveSenderSelector("batch");
 
         const skipped=Math.max(0, rows.filter(r=>rowToPerson(r)).length-10);
         alert(
@@ -1479,6 +1479,7 @@
     });
 
     renderPeople();
+    moveSenderSelector("batch");
   </script>
 </body>
 </html>
