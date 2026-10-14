@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#FAFAF7" />
-  <title>결혼식 감사인사 프롬프트</title>
+  <title>결혼식 감사 인사 · 맞춤 프롬프트</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -454,6 +454,19 @@
       line-height:1.4;
     }
 
+
+    /* 공통 지침 설정: 기본은 간결한 프롬프트 */
+    .guide-settings{margin:15px 0 20px;padding:15px 16px;background:#fff;border:1px solid var(--line);border-radius:14px}
+    .guide-setting-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .guide-setting-title{font-size:14px;font-weight:750;color:var(--text)}
+    .guide-description{font-size:12px;line-height:1.5;color:#8A958D;margin:7px 0 0}
+    .guide-copy{border:0;background:var(--greenSoft);color:var(--green);font-size:12px;font-weight:750;border-radius:8px;padding:9px 11px;cursor:pointer;white-space:nowrap}
+    .guide-option{display:flex;align-items:center;gap:9px;font-size:13px;margin-top:14px;cursor:pointer;color:var(--text);font-weight:600}
+    .guide-option input{appearance:auto;width:17px;height:17px;accent-color:var(--green);margin:0;flex:none}
+    .guide-option .guide-small{color:#89958D;font-size:12px;font-weight:400}
+    .person-tone{grid-column:1/-1}
+    .person-tone-hint{font-size:11px;color:#9AA39D;margin:-3px 0 2px 2px}
+
     @media (min-width:700px){
       .app{
         margin-top:18px;min-height:calc(100vh - 36px);border-radius:20px;
@@ -608,14 +621,14 @@
             </div>
           </div>
 
-          <label class="section-label" for="memo">
-            기억해두고 싶은 내용
+           <label class="section-label" for="memo">
+             그 사람과의 개인적인 메모
             <span style="color:var(--muted);font-weight:700">(선택)</span>
           </label>
           <div class="input-wrap">
-            <textarea id="memo" placeholder="예: 결혼 준비할 때 많이 도와줌&#10;오랜만에 만나서 더 반가웠음"></textarea>
+            <textarea id="memo" placeholder="예: 졸업하고 거의 처음 만나는 친구&#10;결혼 준비할 때 많이 도와준 선배"></textarea>
           </div>
-          <p class="helper">메모는 그대로 옮기지 않고, 결혼식이 끝난 시점에 맞게 자연스럽게 바꿔서 녹일 거예요.</p>
+          <p class="helper">그 사람과의 추억, 관계, 특별한 상황을 적어주세요. 결혼식 전 메모도 사후 시점에 맞게 해석해요.</p>
         </section>
 
         <section class="screen" data-step="4">
@@ -657,8 +670,21 @@
             </div>
           </div>
 
-          <div class="notice">
-            <svg class="flower" viewBox="0 0 28 28" aria-hidden="true" style="width:22px;height:22px">
+           <div class="guide-settings">
+             <div class="guide-setting-top">
+               <span class="guide-setting-title">감사 인사 작성 지침</span>
+               <button class="guide-copy copy-guide-btn" type="button">공통 지침 복사</button>
+             </div>
+             <p class="guide-description">ChatGPT 프로젝트 지침에 한 번 등록하면 짧은 프롬프트만 전달해도 돼요.</p>
+             <label class="guide-option">
+               <input class="include-guide-input" type="checkbox">
+               <span>프롬프트에 전체 지침도 포함하기</span>
+             </label>
+             <p class="guide-description">다른 채팅에서 바로 사용할 때 선택하세요.</p>
+           </div>
+
+           <div class="notice">
+             <svg class="flower" viewBox="0 0 28 28" aria-hidden="true" style="width:22px;height:22px">
               <ellipse cx="14" cy="6.5" rx="4.3" ry="6" fill="#F7C948"/>
               <ellipse cx="21.2" cy="11.5" rx="4.3" ry="6" transform="rotate(72 21.2 11.5)" fill="#F7C948"/>
               <ellipse cx="18.5" cy="20" rx="4.3" ry="6" transform="rotate(144 18.5 20)" fill="#F7C948"/>
@@ -667,8 +693,8 @@
               <circle cx="14" cy="14" r="3.1" fill="#2A5A43"/>
             </svg>
             <div>
-              <strong>여기서는 AI를 직접 호출하지 않아요.</strong><br>
-              입력한 메모의 시점까지 결혼식 이후 관점에 맞게 해석하도록 프롬프트를 만들어줘요.
+              <strong>이 화면에서는 AI를 직접 호출하지 않아요.</strong><br>
+              프롬프트를 복사해 ChatGPT에서 사용하세요. 추가 메모는 개인적인 맥락으로 해석하도록 요청해요.
             </div>
           </div>
         </section>
@@ -687,7 +713,7 @@
           </div>
 
           <h1><span id="resultName">동민</span>님 감사인사용<br>프롬프트가 완성됐어요.</h1>
-          <p class="sub">필요하면 문구를 조금 손본 뒤 그대로 복사해 ChatGPT에 붙여넣으면 돼요.</p>
+           <p class="sub">내용을 확인한 뒤 복사해 ChatGPT에 붙여넣으세요. 프롬프트는 직접 수정할 수 있어요.</p>
 
           <div class="result-card">
             <div class="result-top">
@@ -734,15 +760,36 @@
               </svg>
               여러 명
             </div>
-            <h1 style="margin-bottom:8px">여러 명에게 감사 인사를<br>한 번에 작성해요.</h1>
-            <p class="sub" style="margin-bottom:0">최대 10명까지 입력한 뒤 한 번에 복사할 프롬프트를 만들 수 있어요.</p>
+            <h1 style="margin-bottom:8px">감사 인사<br>프롬프트를 만들어요.</h1>
+            <p class="sub" style="margin-bottom:0">최대 10명의 관계와 개인 메모를 담아 프롬프트를 만들어요.</p>
           </div>
           <div class="batch-count" id="batchCount">1/10명</div>
         </div>
 
-        <div id="senderSlotBatch"></div>
+       <div id="senderSlotBatch">
+         <div class="sender-switch" aria-label="작성자 선택">
+           <span class="sender-label">작성자</span>
+           <div class="sender-options">
+             <button id="batchGroomBtn" class="active" type="button">신랑</button>
+             <button id="batchBrideBtn" type="button">신부</button>
+           </div>
+         </div>
+       </div>
 
-        <div id="peopleList"></div>
+       <div class="guide-settings">
+         <div class="guide-setting-top">
+           <span class="guide-setting-title">감사 인사 작성 지침</span>
+           <button class="guide-copy copy-guide-btn" type="button">공통 지침 복사</button>
+         </div>
+         <p class="guide-description">ChatGPT 프로젝트 지침에 한 번 등록하면 매번 짧은 프롬프트만 복사하면 돼요.</p>
+         <label class="guide-option">
+           <input class="include-guide-input" type="checkbox">
+           <span>프롬프트에 전체 지침도 포함하기</span>
+         </label>
+         <p class="guide-description">다른 채팅에서 바로 사용할 때 선택하세요.</p>
+       </div>
+
+       <div id="peopleList"></div>
 
         <button class="add-person" id="addPersonBtn">+ 한 명 더 추가하기</button>
 
@@ -775,7 +822,7 @@
 
         <div id="batchResults" class="hidden" style="margin-top:28px">
           <h1 style="font-size:24px;margin-bottom:8px;font-weight:750">프롬프트가 완성됐어요.</h1>
-          <p class="sub" style="margin-bottom:20px">이 프롬프트 하나를 복사해서 ChatGPT에 붙여넣으면 사람별 감사 인사를 한꺼번에 받을 수 있어요.</p>
+          <p class="sub" style="margin-bottom:20px">복사한 내용을 ChatGPT에 붙여넣으면 사람별 감사 인사를 한꺼번에 작성할 수 있어요.</p>
           <div id="batchResultList"></div>
         </div>
       </section>
@@ -813,23 +860,17 @@
 
     const groomBtn = document.getElementById("groomBtn");
     const brideBtn = document.getElementById("brideBtn");
+    const batchGroomBtn = document.getElementById("batchGroomBtn");
+    const batchBrideBtn = document.getElementById("batchBrideBtn");
 
     function setSenderRole(role){
       state.senderRole = role;
-      groomBtn.classList.toggle("active", role==="신랑");
-      brideBtn.classList.toggle("active", role==="신부");
+      [groomBtn, batchGroomBtn].forEach(btn=>btn.classList.toggle("active", role==="신랑"));
+      [brideBtn, batchBrideBtn].forEach(btn=>btn.classList.toggle("active", role==="신부"));
     }
 
-    function moveSenderSelector(mode){
-      const senderSwitch=document.getElementById("senderSwitch");
-      const target = mode==="batch"
-        ? document.getElementById("senderSlotBatch")
-        : document.getElementById("senderSlotSingle");
-      if(senderSwitch && target) target.appendChild(senderSwitch);
-    }
-
-    groomBtn.addEventListener("click",()=>setSenderRole("신랑"));
-    brideBtn.addEventListener("click",()=>setSenderRole("신부"));
+    [groomBtn, batchGroomBtn].forEach(btn=>btn.addEventListener("click",()=>setSenderRole("신랑")));
+    [brideBtn, batchBrideBtn].forEach(btn=>btn.addEventListener("click",()=>setSenderRole("신부")));
 
     const nameInput = document.getElementById("name");
     const honorificInput = document.getElementById("honorific");
@@ -934,77 +975,88 @@
       if(state.step>1) showStep(state.step-1);
     });
 
-    function isFar(place){
-      if(!place) return false;
-      return !["울산","부산","경남","창원","김해","양산"].some(x=>place.includes(x));
-    }
-
-    function demoMessage(mode="rewrite",data=state){
-      const rel=data.relation==="기타" ? data.customRelation : data.relation;
-      const place=data.place==="기타" ? data.customPlace : data.place;
-      const call=data.honorific || data.name;
-      const resolvedTone=data.tone || autoToneByRelation(rel);
-      const formal=["직장상사","어른","부모님 지인"].includes(rel) || resolvedTone==="예의 있게";
-      const far=isFar(place);
-
-      let text;
-      if(formal){
-        text=`${call}, 바쁘신 와중에도 결혼식에 함께해주셔서 정말 감사드립니다. ${far?`${place}에서 먼 길 와주신 마음까지 더해져 `:""}덕분에 저희에게 더욱 뜻깊은 하루가 되었습니다. ${data.memo?`${data.memo.replace(/[.!?]+$/,"")} 점도 감사한 마음으로 오래 기억하겠습니다. `:""}보내주신 축하와 마음 감사히 간직하며 두 사람 잘 살아가겠습니다.`;
-      }else{
-        text=`${call}, 결혼식 와줘서 진짜 고마워! ${far?`${place}에서 울산까지 와준 것도 정말 고마웠고, `:""}정신없이 하루가 지나갔는데 식장에서 얼굴 보니까 괜히 더 반갑고 든든하더라ㅎㅎ ${data.memo?`${data.memo.replace(/[.!?]+$/,"")} 것도 생각나서 더 고마웠어. `:""}덕분에 좋은 하루로 잘 마무리했어. 조만간 또 편하게 보자!`;
-      }
-
-      if(mode==="simple"){
-        text=formal
-          ? `${call}, 결혼식에 와서 축하해주셔서 정말 감사드립니다. ${far?`${place}에서 먼 길 와주셔서 더 감사했습니다. `:""}덕분에 저희에게 의미 있는 하루가 되었습니다. 보내주신 마음 감사히 간직하며 잘 살아가겠습니다.`
-          : `${call}, 결혼식 와줘서 정말 고마워. ${far?`${place}에서 여기까지 와준 것도 정말 고마웠어. `:""}정신없는 날이었는데 얼굴 보니까 더 반갑더라. 덕분에 잘 마무리했어. 조만간 또 보자!`;
-      }else if(mode==="friendly" && !formal){
-        text=`${call} 진짜 와줘서 너무 고맙다ㅎㅎ ${far?`${place}에서 울산까지 오는 것도 쉬운 일 아닌데 직접 와줘서 더 고마웠어. `:""}결혼식 날 정신 하나도 없었는데 네 얼굴 보니까 괜히 마음 놓이더라. ${data.memo?`${data.memo.replace(/[.!?]+$/,"")} 것도 생각나서 더 고마웠고! `:""}덕분에 잘 끝냈다. 다음에 만나서 밥 먹자!`;
-      }else if(mode==="formal"){
-        text=`${call}, 귀한 시간 내어 결혼식에 참석해주셔서 진심으로 감사드립니다. ${far?`${place}에서 먼 길 와주신 점도 정말 감사했습니다. `:""}직접 축하해주신 덕분에 더욱 뜻깊고 감사한 하루가 되었습니다. 보내주신 마음 잊지 않고 두 사람 서로 아끼며 잘 살아가겠습니다.`;
-      }else if(mode==="short"){
-        text=formal
-          ? `${call}, 결혼식에 참석해 축하해주셔서 정말 감사드립니다. ${far?`${place}에서 먼 길 와주셔서 더 감사했습니다. `:""}보내주신 마음 감사히 간직하며 두 사람 잘 살아가겠습니다.`
-          : `${call}, 결혼식 와줘서 진짜 고마워! ${far?`${place}에서 여기까지 와줘서 더 고마웠어. `:""}정신없는 날이었는데 얼굴 보니까 정말 반갑더라ㅎㅎ 덕분에 잘 마무리했어. 조만간 보자!`;
-      }
-      return text;
-    }
-
     let originalGeneratedMessage = "";
 
-    function promptRules(){
-      return [
-        "한국 결혼식에 실제로 참석해 준 사람에게 보내는 카카오톡 감사 인사를 작성해줘.",
-        "중요: 이 감사 인사는 결혼식이 모두 끝난 뒤 보내는 메시지야. 결혼식과 참석에 관한 표현은 반드시 결혼식 이후 시점에 맞춰 작성해줘.",
-        "약 280~330자 안팎으로, 대략 300자 정도가 되도록 자연스럽게 작성해줘.",
-        "입력 정보를 단순 나열하거나 템플릿처럼 이어 붙이지 말고 전체 문장을 새롭게 구성해줘.",
-        "관계와 친밀도에 맞춰 반말/존댓말과 거리감을 자연스럽게 조절해줘.",
-        "작성자가 신랑인지 신부인지에 따라 말투의 결을 아주 자연스럽게 조절해줘. 다만 성별 고정관념을 과장하지 말고, 신랑은 조금 더 간결하고 편한 구어체, 신부는 조금 더 부드럽고 다정한 구어체를 기본 방향으로 참고해줘.",
-        "출발지가 울산·부산·경남권이면 '먼 길' 같은 표현을 억지로 쓰지 말아줘.",
-        "서울·경기·인천 등 먼 지역이면 이동해 준 수고를 한 번 정도 자연스럽게 반영해줘.",
-        "추가 메모는 결혼식 전에 적어둔 메모일 수도 있어. 메모 속 '처음 볼 것 같음', '만날 예정', '도와줄 예정' 같은 미래형 표현을 그대로 쓰지 말고, 결혼식이 이미 끝난 현재 시점에 맞게 과거형이나 완료된 맥락으로 자연스럽게 바꿔줘.",
-        "예를 들어 '결혼식 때 광이를 처음 볼 것 같음'이라고 적혀 있다면 '이번에 결혼식에서 광이도 처음 봤을 텐데'처럼 결혼식 이후 시점으로 자연스럽게 해석해줘.",
-        "추가 메모가 있으면 문장을 그대로 복사하지 말고 의미와 분위기만 자연스럽게 녹여줘.",
-        "감사의 마무리에는 관계에 맞는 경우 '앞으로 둘이 잘 살겠다', '덕분에 행복하게 잘 살겠다', '신혼여행 다녀오면 또 만나자/만나요', '앞으로도 건강하게 지내자/건강합시다' 같은 내용을 자연스럽게 활용해줘.",
-        "단, 위 마무리 표현을 한 메시지에 전부 넣거나 매번 똑같이 반복하지 말고, 사람과 관계에 맞는 1~2개만 골라 자연스럽게 변형해줘.",
-        "과하게 감동적이거나 오글거리는 문체는 피하고 실제 카카오톡처럼 담백하게 써줘.",
-        "'귀한 발걸음', '성원에 보답', '평생 잊지 않겠습니다', '저희 두 사람의 앞날을 축복해주셔서' 같은 전형적인 답례 문구는 피해주세요.",
-        "설명이나 해설 없이 최종 메시지만 작성해줘."
+    const SHARED_GUIDELINES = [
+      "# 결혼식 감사 인사 생성 공통 지침",
+      "역할: 결혼식이 끝난 뒤 신랑 또는 신부가 하객 한 사람 한 사람에게 보내는 실제 카카오톡 감사 인사를 작성한다. 예문을 기계적으로 조합하지 않고 관계·말투·추억에 맞춰 독립적으로 쓴다.",
+      "",
+      "## 핵심 구성",
+      "감사(와준 것과 축하에 대한 고마움) → 그 사람만의 개인적인 디테일(관계·추억·상황) → 앞으로의 약속이나 인사(다시 만나기, 잘 살겠다는 다짐 등)를 하나의 자연스러운 흐름으로 연결한다. 구조를 고정된 세 문장으로 만들지 않는다.",
+      "",
+      "## 입력 항목 해석",
+      "작성자는 신랑/신부이며 직접 쓴 듯 1인칭으로 쓴다. 이름은 출력 제목에, 호칭은 자연스러운 본문 호명에 사용한다. 관계와 말투가 충돌하면 호칭·상대와의 실제 거리감을 고려해 가장 자연스러운 높임 수준으로 조절한다. '적당히'는 너무 친한 척하거나 과도하게 격식을 차리지 않는 대화체다.",
+      "신랑은 조금 더 간결하고 편한 구어체, 신부는 조금 더 부드럽고 다정한 구어체를 참고하되 성별보다 관계를 우선하고 고정관념을 과장하지 않는다.",
+      "",
+      "## 추가 메모: 개인화 최우선 자료",
+      "추가 메모는 그 사람과 작성자 사이의 개인적인 관계·추억·사연·특별한 상황을 적은 메모다. 단순 나열하거나 원문을 복사하지 말고 감정과 의미를 재구성해 문장에 녹인다. 메모가 있다면 출발지 같은 일반적인 정보보다 그 사람 고유의 맥락을 우선한다.",
+      "결혼식 전에 쓴 메모의 미래형(처음 볼 것 같음, 도와줄 예정 등)은 결혼식 후 관점으로 해석한다. 다만 예정된 행동이 실제로 일어났다고 확실하지 않으면 단정하지 않는다.",
+      "메모가 없으면 관계와 참석의 의미를 중심으로 쓰고, 실제로 말한 내용·사진·표정·옷차림·추억·도움·식사 여부를 지어내지 않는다.",
+      "",
+      "## 관계별 어조",
+      "친한 친구는 편안한 반말·가벼운 농담·이모티콘을 선택적으로 활용한다. 일반 친구·지인은 과하게 친한 척하지 않으며 오랜만에 만났다면 반가움을 반영한다. 직장 동료는 평소 친밀도에 맞춘 구어체를, 상사·어른은 따뜻하고 정중한 존댓말을 사용한다. 친척은 가족적인 정서와 예의를 균형 있게, 부모님 지인은 직접 친분을 지어내지 않고 정중하게 작성한다. 아이 동반자는 실제 확인된 수고를, 사회·축가·축사 등 도운 사람은 도움의 의미를 강조한다. 해외에서 온 사람은 해외 이동의 수고를 적절히 언급한다.",
+      "",
+      "## 지역·시점",
+      "결혼식 장소는 울산이다. 서울·경기·인천에서 참석했다면 장거리 이동의 고마움을 한 번 자연스럽게 언급할 수 있다. 울산·부산·경남이면 '먼 길', '멀리서', '오느라 고생' 같은 장거리 표현을 쓰지 않는다. 구미·대구·경북 등 그 외 국내 지역은 출발지만 보고 먼 길이라 단정하지 않는다. 해외 출발은 별도로 배려한다. 출발지를 모르면 이동을 추측하지 않는다.",
+      "모든 참석 표현은 결혼식이 끝난 후 시점의 과거형으로 쓴다. 향후 결혼생활이나 다시 만날 계획은 미래형으로 표현할 수 있다. 메모에 결혼식 전 시점의 표현이 있어도 최종 메시지에서는 자연스럽게 바꾼다.",
+      "",
+      "## 길이·문체·마무리",
+      "공백 포함 약 300자(280~330자)를 목표로 한다. 실제 카카오톡처럼 담백하고 구어적인 문장으로 쓰되 입력 정보를 항목처럼 나열하거나 길이를 채우려고 의미를 반복하지 않는다. 줄바꿈은 자연스럽게 사용한다.",
+      "'귀한 발걸음', '성원에 보답', '평생 잊지 않겠습니다', '저희 두 사람의 앞날을 축복해 주셔서', '인생의 새로운 장' 같은 전형적인 답례·오글거리는 표현은 피한다.",
+      "상황에 맞게 '둘이 잘 살겠다', '신혼여행 다녀와서 또 보자', '건강히 지내자', '다음에 밥 먹자' 등 마무리 1~2개만 자연스럽게 변형한다. 신혼여행 후 재회 표현은 시점과 관계에 맞을 때만 사용한다.",
+      "",
+      "## 여러 명 생성과 출력",
+      "받는 사람마다 첫 문장·문장 전개·마무리를 다르게 쓰며 유사한 감정 표현을 기계적으로 반복하지 않는다. 한 사람의 메모가 다른 사람에게 섞이지 않도록 한다. 표현 다양성보다 자연스러움과 사실 정확성을 우선한다.",
+      "사람별로 '1. 이름' 형태의 제목을 먼저 쓰고 다음 줄에는 최종 감사 메시지만 적는다. 분석, 설명, 글자 수, 부가적인 메모는 출력하지 않는다."
+    ].join("\n");
+
+    let includeGuidelines = false;
+    function syncGuideCheckboxes(){
+      document.querySelectorAll(".include-guide-input").forEach(el=>{el.checked=includeGuidelines});
+    }
+    document.querySelectorAll(".include-guide-input").forEach(el=>{
+      el.addEventListener("change",()=>{
+        includeGuidelines=el.checked;
+        syncGuideCheckboxes();
+      });
+    });
+    document.querySelectorAll(".copy-guide-btn").forEach(btn=>{
+      btn.addEventListener("click",()=>copyText(SHARED_GUIDELINES));
+    });
+
+    function makePrompt(peopleData){
+      const list=peopleData.map((p,i)=>[
+        `${i+1}. ${p.name}`,
+        `- 호칭: ${p.honorific || p.name}`,
+        `- 관계: ${p.relation}`,
+        `- 말투: ${p.tone}`,
+        `- 출발지: ${p.place}`,
+        `- 추가 메모: ${p.memo || "없음"}`
+      ].join("\n")).join("\n\n");
+
+      const preamble=[
+        `아래 사람들에게 각각 결혼식 참석 감사 인사를 작성해줘.`,
+        `작성자: ${state.senderRole}`,
+        "",
+        includeGuidelines
+          ? `[공통 지침]\n${SHARED_GUIDELINES}`
+          : `설정된 공통 지침을 적용하되, 특히 '추가 메모'를 각 사람과의 개인적인 관계·추억·상황에 대한 핵심 정보로 해석해 자연스럽게 반영해줘.`,
+        "",
+        "[받는 사람 목록]",
+        list
       ];
+      return preamble.join("\n");
     }
 
     function buildSinglePrompt(){
-      const info = [
-        `작성자: ${state.senderRole}`,
-        `이름: ${state.name}`,
-        `평소 부르는 호칭: ${state.honorific}`,
-        `관계: ${relationValue()}`,
-        `말투: ${state.tone}`,
-        `출발지: ${placeValue()}`,
-        `추가 메모: ${state.memo || "없음"}`
-      ];
-
-      return `${promptRules().join("\n")}\n\n[받는 사람 정보]\n${info.join("\n")}`;
+      return makePrompt([{
+        name:state.name,
+        honorific:state.honorific,
+        relation:relationValue(),
+        tone:state.tone,
+        place:placeValue(),
+        memo:state.memo
+      }]);
     }
 
     function updateCharCount(){
@@ -1068,8 +1120,7 @@
       singleFlow.classList.remove("hidden");
       batchFlow.classList.add("hidden");
       singleNav.classList.remove("hidden");
-      moveSenderSelector("single");
-      if(state.step==="result") bottomBar.classList.add("hidden");
+if(state.step==="result") bottomBar.classList.add("hidden");
       else bottomBar.classList.remove("hidden");
     });
 
@@ -1079,8 +1130,7 @@
       batchFlow.classList.remove("hidden");
       singleFlow.classList.add("hidden");
       singleNav.classList.add("hidden");
-      moveSenderSelector("batch");
-      bottomBar.classList.add("hidden");
+bottomBar.classList.add("hidden");
     });
 
     /* 여러 명 모드 */
@@ -1101,6 +1151,7 @@
         honorific:"",
         relation:"친구·지인",
         customRelation:"",
+        tone:"자동",
         place:"울산",
         customPlace:"",
         memo:""
@@ -1121,7 +1172,7 @@
       }
 
       const inputRows = [
-        ["이름","호칭","관계","출발지","메모"],
+        ["이름","호칭","관계","말투","출발지","메모"],
         ["","","","",""],
         ["","","","",""],
         ["","","","",""],
@@ -1139,8 +1190,9 @@
         ["이름","동민"],
         ["호칭","동민햄"],
         ["관계","친한 친구 / 친구·지인 / 친한 직장동료 / 직장동료 / 직장상사 / 친척 / 어른 / 부모님 지인 / 그 외 관계 직접 입력"],
-        ["출발지","서울 / 울산 / 부산 / 경남 / 수원 등 실제 출발 지역"],
-        ["메모","축가 도와줌, 같이 야구 직관한 적 있음 등 문장으로 만들 때 참고할 내용"],
+        ["말투","자동 / 편하게 / 적당히 / 예의 있게 (선택, 빈칸이면 자동)"],
+        ["출발지","서울 / 울산 / 부산 / 경남 / 구미 / 수원 등 실제 출발 지역"],
+        ["메모","졸업 후 거의 처음 만나는 사이, 예전에 같이 일함 등 그 사람과의 개인적인 관계·추억·상황"],
         ["안내","첫 번째 시트 '하객 입력'에 최대 10명까지 작성한 뒤 웹에서 불러오면 됩니다."]
       ];
 
@@ -1151,9 +1203,10 @@
       wsInput["!cols"] = [
         {wch:14},
         {wch:16},
-        {wch:20},
-        {wch:16},
-        {wch:42}
+         {wch:20},
+         {wch:16},
+         {wch:16},
+         {wch:52}
       ];
       wsExample["!cols"] = [
         {wch:16},
@@ -1209,10 +1262,11 @@
       const name=pickRowValue(row,["이름","받는분이름","받는사람","성명","name"]);
       const honorific=pickRowValue(row,["호칭","평소부르는호칭","부르는호칭","honorific"]);
       const relationRaw=pickRowValue(row,["관계","사이","relationship"]);
+      const toneRaw=pickRowValue(row,["말투","어조","톤","tone"]);
       const placeRaw=pickRowValue(row,["출발지","지역","거리","출발지역","place"]);
       const memo=pickRowValue(row,["메모","추가메모","추가내용","비고","memo"]);
 
-      if(!name && !honorific && !relationRaw && !placeRaw && !memo) return null;
+      if(!name && !honorific && !relationRaw && !toneRaw && !placeRaw && !memo) return null;
 
       const relationMapped=mapRelation(relationRaw);
       const placeMapped=mapPlace(placeRaw);
@@ -1222,6 +1276,7 @@
         honorific:honorific || name,
         relation:relationMapped.relation,
         customRelation:relationMapped.customRelation,
+        tone:["편하게","적당히","예의 있게"].includes(toneRaw) ? toneRaw : "자동",
         place:placeMapped.place,
         customPlace:placeMapped.customPlace,
         memo
@@ -1296,9 +1351,14 @@
               </select>
             </div>
 
-            <div class="input-wrap full">
-              <input data-field="memo" data-index="${i}" value="${esc(p.memo)}" placeholder="메모 (선택)">
-            </div>
+             <div class="input-wrap select-wrap person-tone">
+               <select data-field="tone" data-index="${i}" aria-label="${i+1}번째 사람 말투">
+                 ${["자동","편하게","적당히","예의 있게"].map(v=>`<option value="${v}" ${(p.tone||"자동")===v?"selected":""}>말투 · ${v==="자동"?`자동 (${autoToneByRelation(p.relation==="기타"?p.customRelation:p.relation)})`:v}</option>`).join("")}
+               </select>
+             </div>
+             <div class="input-wrap full">
+               <input data-field="memo" data-index="${i}" value="${esc(p.memo)}" placeholder="추가 메모 · 관계, 추억, 특별한 상황 (선택)">
+             </div>
           </div>
 
           <div class="custom-batch-relation ${p.relation==="기타"?"":"hidden"}">
@@ -1312,7 +1372,7 @@
               <input data-field="customPlace" data-index="${i}" value="${esc(p.customPlace)}" placeholder="지역 직접 입력">
             </div>
           </div>
-          <div class="batch-note">말투는 관계에 맞춰 자동으로 조절해요.</div>
+           <div class="batch-note">추가 메모는 해당 사람만의 개인적인 맥락으로 활용해요. 말투는 자동 또는 직접 선택할 수 있어요.</div>
         </div>
       `).join("");
 
@@ -1372,31 +1432,16 @@
       const peopleText = people.map((p,i)=>{
         const rel=p.relation==="기타"?p.customRelation:p.relation;
         const place=p.place==="기타"?p.customPlace:p.place;
-        const tone=autoToneByRelation(rel);
-
-        return [
-          `${i+1}. ${p.name}`,
-          `- 호칭: ${p.honorific}`,
-          `- 관계: ${rel}`,
-          `- 말투: ${tone}`,
-          `- 출발지: ${place}`,
-          `- 추가 메모: ${p.memo || "없음"}`
-        ].join("\n");
-      }).join("\n\n");
-
-      return [
-        `아래 사람들에게 각각 결혼식 참석 감사 인사를 작성해줘. 작성자는 ${state.senderRole}이야.`,
-        "",
-        ...promptRules().slice(0,-1),
-        `모든 메시지는 ${state.senderRole}이 직접 작성한 것처럼 자연스럽게 느껴지도록 말투의 결을 맞춰줘.`,
-        "각 사람마다 서로 다른 문장 구조와 시작·마무리 표현을 사용해서 복사한 티가 나지 않게 해줘.",
-        "추가 메모에 결혼식 전 시점의 표현이 섞여 있어도, 각 메시지는 반드시 결혼식이 끝난 뒤의 시점으로 자연스럽게 바꿔줘.",
-        "마무리도 사람마다 다르게 해줘. 잘 살겠다는 말, 신혼여행 후 다시 보자는 말, 건강하게 지내자는 말 등을 관계에 맞게 골라 쓰되 반복하지 말아줘.",
-        "결과는 반드시 사람별로 이름을 제목처럼 먼저 쓰고, 그 아래에 최종 메시지만 적어줘.",
-        "",
-        "[받는 사람 목록]",
-        peopleText
-      ].join("\n");
+        return {
+          name:p.name,
+          honorific:p.honorific,
+          relation:rel,
+          tone:p.tone && p.tone!=="자동" ? p.tone : autoToneByRelation(rel),
+          place,
+          memo:p.memo
+        };
+      });
+      return makePrompt(peopleText);
     }
 
     function renderBatchPrompt(){
@@ -1479,7 +1524,6 @@
     });
 
     renderPeople();
-    moveSenderSelector("batch");
   </script>
 </body>
 </html>
